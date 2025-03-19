@@ -142,7 +142,7 @@ function getMyDomain(hostname) {
     // Pattern: [orgName]--[sandboxName].lightning.force.com
     const parts = hostname.split('.');
     if (parts.length > 0) {
-      const firstPart = parts[0]; // e.g., "similarweb--yotamsb"
+      const firstPart = parts[0]; // e.g., "yotam--sandbox"
       if (firstPart.includes('--')) {
         // This is likely a sandbox with org name
         const [orgName, sandboxName] = firstPart.split('--');
