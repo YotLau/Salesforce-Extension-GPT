@@ -1,0 +1,133 @@
+/* popup.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 400px;
+  color: #333;
+}
+
+.container {
+  padding: 15px;
+}
+
+h1 {
+  font-size: 20px;
+  margin-top: 0;
+  color: #0070d2;
+}
+
+h2 {
+  font-size: 16px;
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.status-message {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.rule-header {
+  margin-bottom: 15px;
+}
+
+#object-name {
+  font-size: 12px;
+  color: #666;
+  display: block;
+  margin-top: 5px;
+}
+
+.actions {
+  margin: 15px 0;
+}
+
+.primary-btn {
+  background-color: #0070d2;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background-color: #005fb2;
+}
+
+.primary-btn:disabled {
+  background-color: #c9c7c5;
+  cursor: not-allowed;
+}
+
+button {
+  background-color: #f4f6f9;
+  border: 1px solid #d8dde6;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #eef1f6;
+}
+
+#explanation-content {
+  background-color: #f4f6f9;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+#settings-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  padding: 15px;
+  z-index: 10;
+}
+
+.setting-item {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.setting-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}

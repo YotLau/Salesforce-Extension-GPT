@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Salesforce AI Explainer",
+  "version": "1.0",
+  "description": "Simplify Salesforce complex logic using AI",
+  "permissions": ["storage", "activeTab", "cookies"],
+  "host_permissions": ["https://*.salesforce.com/*", "https://*.force.com/*", "https://*.salesforce-setup.com/*"],
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["https://*.salesforce.com/*", "https://*.force.com/*", "https://*.salesforce-setup.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }]
+}

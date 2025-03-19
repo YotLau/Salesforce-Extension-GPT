@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salesforce AI Explainer</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Salesforce AI Explainer</h1>
+    
+    <div id="main-content">
+      <div id="not-salesforce" class="status-message hidden">
+        <p>Please navigate to a Salesforce validation rule or flow page</p>
+      </div>
+      
+      <div id="loading" class="status-message hidden">
+        <p>Loading...</p>
+      </div>
+      
+      <div id="error-message" class="status-message hidden">
+        <p id="error-text"></p>
+      </div>
+      
+      <div id="rule-info" class="hidden">
+        <div class="rule-header">
+          <h2 id="rule-name"></h2>
+          <span id="object-name"></span>
+        </div>
+        
+        <div class="actions">
+          <button id="summarize-btn" class="primary-btn">🤖 Summarize</button>
+        </div>
+        
+        <div id="explanation" class="hidden">
+          <h3>Explanation</h3>
+          <div id="explanation-content"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <button id="settings-btn">⚙️ Settings</button>
+    </div>
+    
+    <div id="settings-panel" class="hidden">
+      <h2>Settings</h2>
+      <div class="setting-item">
+        <label for="openai-key">OpenAI API Key</label>
+        <input type="password" id="openai-key" placeholder="sk-...">
+      </div>
+      <div class="setting-item">
+        <label for="openai-model">Model</label>
+        <select id="openai-model">
+          <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+          <option value="gpt-4">GPT-4</option>
+        </select>
+      </div>
+      <div class="setting-actions">
+        <button id="save-settings" class="primary-btn">Save</button>
+        <button id="cancel-settings">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
