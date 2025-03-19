@@ -7,11 +7,13 @@
 A Chrome extension that uses AI to explain complex Salesforce configurations in simple terms. Currently supports:
 - ✅ Validation Rules
 - ✅ Flows
+- ✅ Apex Classes
 
 ## 🌟 Features
 
 - **Validation Rule Explainer**: Analyzes validation rule formulas and explains them in plain English
 - **Flow Explainer**: Breaks down complex Salesforce flows into understandable summaries
+- **Apex Class Explainer**: Summarizes Apex code to help developers understand functionality quickly
 - **Secure Authentication**: Uses your existing Salesforce session - no credentials stored
 - **Privacy-Focused**: Your OpenAI API key stays in your browser, never sent to any server
 - **Simple UI**: Clean, intuitive interface that works seamlessly within Salesforce
@@ -64,6 +66,12 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
 2. Click the extension icon
 3. Click the 🤖 Summarize button
 4. View the AI-generated explanation
+
+### Explaining Apex Classes
+1. Navigate to any Salesforce Apex Class in Setup
+2. Click the extension icon
+3. Click the 🤖 Summarize button
+4. View the AI-generated explanation of the class purpose, methods, and patterns
 
 ## 🔒 Security & Privacy
 

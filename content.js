@@ -9,6 +9,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "checkFlowPage") {
     const flowInfo = extractFlowInfo();
     sendResponse(flowInfo);
+  } else if (request.action === "checkApexClassPage") {
+    const apexInfo = extractApexClassInfo();
+    sendResponse(apexInfo);
   }
   return true;
 });
@@ -100,3 +103,75 @@ function extractFlowInfo() {
     flowId
   };
 }
+
+// Extract Apex Class info from current page
+// Function to extract Apex Class information from the current page
+function extractApexClassInfo() {
+  const url = window.location.href;
+  console.log('Checking URL for Apex Class in content script:', url);
+  
+  // Check if we're on an Apex Class page - improved detection
+  const isApexClassPage = 
+    url.includes('/ApexClasses/') || 
+    url.includes('setupid=ApexClasses') ||
+    url.includes('setup/ApexClassDetail') ||
+    // Add detection for the 01p prefix in URLs
+    /01p[a-zA-Z0-9]{12,15}/.test(url) ||
+    // Handle URL encoded paths with %2F prefix
+    url.includes('%2F01p');
+  
+  if (!isApexClassPage) {
+    return { isApexClassPage: false };
+  }
+  
+  // Extract Apex Class ID from URL - improved extraction
+  let apexClassId = '';
+  
+  // Different URL patterns for Lightning vs Classic
+  if (url.includes('/ApexClass/')) {
+    // Lightning URL format
+    const urlParts = url.split('/');
+    const idIndex = urlParts.indexOf('ApexClass') + 1;
+    if (idIndex < urlParts.length) {
+      apexClassId = urlParts[idIndex];
+    }
+  } else if (url.includes('%2F01p')) {
+    // Handle URL encoded paths with %2F prefix
+    const match = url.match(/%2F(01p[a-zA-Z0-9]{12,15})/);
+    if (match && match[1]) {
+      apexClassId = match[1];
+    }
+  } else if (/01p[a-zA-Z0-9]{12,15}/.test(url)) {
+    // Direct ID in URL
+    const match = url.match(/(01p[a-zA-Z0-9]{12,15})/);
+    if (match && match[1]) {
+      apexClassId = match[1];
+    }
+  } else {
+    // Classic URL format or other patterns
+    const urlParams = new URLSearchParams(window.location.search);
+    apexClassId = urlParams.get("id") || urlParams.get("classId");
+  }
+  
+  console.log('Extracted Apex Class ID:', apexClassId);
+  
+  return {
+    isApexClassPage: Boolean(apexClassId),
+    apexClassId
+  };
+}
+
+// Add message listener if not already present
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === "checkValidationRulePage") {
+    const pageInfo = extractValidationRuleInfo();
+    sendResponse(pageInfo);
+  } else if (request.action === "checkFlowPage") {
+    const flowInfo = extractFlowInfo();
+    sendResponse(flowInfo);
+  } else if (request.action === "checkApexClassPage") {
+    const apexInfo = extractApexClassInfo();
+    sendResponse(apexInfo);
+  }
+  return true;
+});
