@@ -142,7 +142,7 @@ function getMyDomain(hostname) {
     // Pattern: [orgName]--[sandboxName].lightning.force.com
     const parts = hostname.split('.');
     if (parts.length > 0) {
-      const firstPart = parts[0]; // e.g., "similarweb--yotamsb"
+      const firstPart = parts[0]; // e.g., "yotam--sandbox"
       if (firstPart.includes('--')) {
         // This is likely a sandbox with org name
         const [orgName, sandboxName] = firstPart.split('--');
@@ -157,9 +157,6 @@ function getMyDomain(hostname) {
   
   return hostname;
 }
-
-// Export functions
-// Add this function to your existing salesforce.js file
 
 // Get Flow metadata using Tooling API
 async function getFlowMetadata(flowId, sessionInfo) {
@@ -184,11 +181,34 @@ async function getFlowMetadata(flowId, sessionInfo) {
   }
 }
 
-// Make sure to add getFlowMetadata to your export statement
+// Get Apex Class metadata
+async function getApexClassMetadata(apexClassId, sessionInfo) {
+  try {
+    if (!apexClassId) {
+      throw new Error("Apex Class ID is required");
+    }
+    
+    const url = `/services/data/v${API_VERSION}/tooling/sobjects/ApexClass/${apexClassId}`;
+    console.log('Fetching Apex Class metadata from URL:', url);
+    
+    const result = await makeRestCall(url, sessionInfo);
+    
+    if (!result) {
+      throw new Error("Apex Class not found");
+    }
+    
+    return result;
+  } catch (error) {
+    console.error("Error fetching Apex Class metadata:", error);
+    throw error;
+  }
+}
+
+// Single export statement for all functions
 export {
   getSession,
-  makeRestCall,
   getValidationRuleMetadata,
   getFlowMetadata,
-  API_VERSION
+  getApexClassMetadata,
+  makeRestCall
 };

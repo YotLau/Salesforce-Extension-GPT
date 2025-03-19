@@ -36,6 +36,10 @@ settingsBtn.addEventListener('click', openSettings);
 saveSettingsBtn.addEventListener('click', saveSettings);
 cancelSettingsBtn.addEventListener('click', closeSettings);
 
+// Add a variable to store the Apex Class ID
+let currentApexClassId = null;
+
+// Update the initializePopup function to check for Apex Class pages
 async function initializePopup() {
   showElement(loadingEl);
   hideElement(notSalesforceEl);
@@ -83,13 +87,13 @@ async function initializePopup() {
         return;
       }
       
-      // If not a validation rule page, check if it's a flow page
+      // Check if it's a flow page
       console.log('Checking flow page:', currentTab.url);
       const flowResponse = await chrome.tabs.sendMessage(currentTab.id, { action: 'checkFlowPage' });
       console.log('Flow check response:', flowResponse);
       
       if (flowResponse && flowResponse.isFlowPage) {
-        // We're on a flow page
+        // Store flow ID
         currentFlowId = flowResponse.flowId;
         
         // Get session
@@ -104,22 +108,42 @@ async function initializePopup() {
         return;
       }
       
-      // Not a validation rule or flow page
-      errorTextEl.textContent = `This doesn't appear to be a validation rule or flow page. URL: ${currentTab.url}`;
-      showElement(errorMessageEl);
+      // Check if it's an Apex Class page
+      console.log('Checking Apex Class page:', currentTab.url);
+      const apexResponse = await chrome.tabs.sendMessage(currentTab.id, { action: 'checkApexClassPage' });
+      console.log('Apex Class check response:', apexResponse);
+      
+      if (apexResponse && apexResponse.isApexClassPage) {
+        // Store Apex Class ID
+        currentApexClassId = apexResponse.apexClassId;
+        
+        // Get session
+        sessionInfo = await getSession(currentHost);
+        
+        // Show Apex Class info
+        ruleNameEl.textContent = 'Salesforce Apex Class';
+        objectNameEl.textContent = `Class ID: ${currentApexClassId}`;
+        
+        hideElement(loadingEl);
+        showElement(ruleInfoEl);
+        return;
+      }
+      
+      // Not on a supported page
+      showElement(notSalesforceEl);
       hideElement(loadingEl);
       
     } catch (error) {
       console.error('Error communicating with content script:', error);
-      showError(`Content script not responding. Please refresh the page and try again. URL: ${currentTab.url}`);
+      showError('Content script not responding. Please refresh the page and try again. URL: ' + currentTab.url);
     }
-    
   } catch (error) {
     console.error('Error initializing popup:', error);
-    showError('Failed to initialize: ' + error.message);
+    showError('Error initializing: ' + error.message);
   }
 }
 
+// Update the handleSummarize function to process Apex Classes
 async function handleSummarize() {
   try {
     // Check if we have OpenAI key
@@ -134,9 +158,9 @@ async function handleSummarize() {
     summarizeBtn.textContent = 'Loading...';
     hideElement(explanationEl);
     
-    // Determine if we're handling a validation rule or flow
+    // Determine if we're handling a validation rule, flow, or apex class
     if (validationRuleInfo && validationRuleInfo.validationRuleId) {
-      // Handle validation rule
+      // Handle validation rule - existing code
       const ruleMetadata = await getValidationRuleMetadata(
         validationRuleInfo.validationRuleId,
         sessionInfo
@@ -155,7 +179,7 @@ async function handleSummarize() {
       showElement(explanationEl);
     } 
     else if (currentFlowId) {
-      // Handle flow
+      // Handle flow - existing code
       // Import required modules
       const { getFlowMetadata } = await import('../utils/salesforce.js');
       const { explainFlow } = await import('../utils/api.js');
@@ -171,13 +195,35 @@ async function handleSummarize() {
       explanationContentEl.innerHTML = formatExplanation(explanation);
       showElement(explanationEl);
     }
-    else {
-      throw new Error("No validation rule or flow identified");
+    else if (currentApexClassId) {
+      // Handle Apex Class
+      console.log('Processing Apex Class with ID:', currentApexClassId);
+      
+      // Import required modules
+      const { getApexClassMetadata } = await import('../utils/salesforce.js');
+      const { explainApexClass } = await import('../utils/api.js');
+      
+      // Get Apex Class metadata
+      const apexMetadata = await getApexClassMetadata(currentApexClassId, sessionInfo);
+      
+      // Update display name
+      ruleNameEl.textContent = apexMetadata.Name || 'Apex Class';
+      objectNameEl.textContent = `Version: ${apexMetadata.ApiVersion}`;
+      
+      // Get explanation from OpenAI
+      const model = openaiModelSelect.value;
+      const explanation = await explainApexClass(apexMetadata, apiKey, model);
+      
+      // Show explanation
+      explanationContentEl.innerHTML = formatExplanation(explanation);
+      showElement(explanationEl);
+    } else {
+      throw new Error('No validation rule, flow, or Apex class identified');
     }
     
   } catch (error) {
     console.error('Error summarizing:', error);
-    showError('Failed to summarize: ' + error.message);
+    showError(`Error summarizing: ${error.message}`);
   } finally {
     // Reset button
     summarizeBtn.disabled = false;
