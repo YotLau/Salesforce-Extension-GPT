@@ -266,10 +266,11 @@ function loadSettings() {
 
 // Helper functions
 function isSalesforceDomain(hostname) {
-  // Update to include salesforce-setup.com domain
+  // Update to include all Salesforce domain patterns
   return hostname.includes('salesforce.com') || 
          hostname.includes('force.com') || 
-         hostname.includes('salesforce-setup.com');
+         hostname.includes('salesforce-setup.com') ||
+         hostname.includes('visualforce.com');
 }
 
 function showElement(element) {
