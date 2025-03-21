@@ -1,97 +1,175 @@
-/* popup.css */
+/* popup.css - Improved design */
+:root {
+  --primary-color: #0070d2;
+  --primary-hover: #005fb2;
+  --primary-light: #e3f1fc;
+  --secondary-color: #f4f6f9;
+  --secondary-hover: #eef1f6;
+  --text-color: #2a2a2a;
+  --text-muted: #666;
+  --border-color: #d8dde6;
+  --border-light: #eee;
+  --success-color: #4bca81;
+  --danger-color: #e53e3e;
+  --warning-color: #ffb75d;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Salesforce Sans', Arial, sans-serif;
   margin: 0;
   padding: 0;
   width: 400px;
-  color: #333;
+  color: var(--text-color);
+  line-height: 1.5;
+  background-color: #f9fafc;
 }
 
 .container {
-  padding: 15px;
+  min-height: 600px; /* Increased height to ensure security settings are visible */
+  width: 100%;
+  padding: 20px;
+  position: relative;
+  background-color: white;
+  box-shadow: var(--shadow-sm);
 }
 
+/* Typography */
 h1 {
   font-size: 20px;
-  margin-top: 0;
-  color: #0070d2;
+  margin-bottom: 16px;
+  color: var(--primary-color);
+  font-weight: 500;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 12px;
 }
 
 h2 {
-  font-size: 16px;
-  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--text-color);
+  font-weight: 500;
 }
 
 h3 {
-  font-size: 14px;
-  margin-top: 15px;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  font-weight: 500;
 }
 
+/* Status Messages */
 .status-message {
-  padding: 20px;
+  padding: 30px 20px;
   text-align: center;
-  color: #666;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-color);
+  border-radius: var(--radius-md);
+  margin: 20px 0;
 }
 
-.rule-header {
-  margin-bottom: 15px;
-}
-
-#object-name {
-  font-size: 12px;
-  color: #666;
-  display: block;
-  margin-top: 5px;
-}
-
-.actions {
-  margin: 15px 0;
+/* Buttons */
+button {
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  outline: none;
 }
 
 .primary-btn {
-  background-color: #0070d2;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+  box-shadow: var(--shadow-sm);
 }
 
 .primary-btn:hover {
-  background-color: #005fb2;
+  background-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 .primary-btn:disabled {
   background-color: #c9c7c5;
   cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
 }
 
-button {
-  background-color: #f4f6f9;
-  border: 1px solid #d8dde6;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+button:not(.primary-btn) {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
-button:hover {
-  background-color: #eef1f6;
+button:not(.primary-btn):hover {
+  background-color: var(--secondary-hover);
+  border-color: #c9c7c5;
+}
+
+/* Rule Header */
+.rule-header {
+  margin-bottom: 20px;
+  background-color: var(--primary-light);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+#object-name {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+}
+
+/* Actions */
+.actions {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
 }
 
 #explanation-content {
-  background-color: #f4f6f9;
-  padding: 10px;
-  border-radius: 4px;
+  background-color: var(--secondary-color);
+  padding: 16px;
+  border-radius: var(--radius-md);
   margin-top: 10px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+  border-left: 4px solid var(--primary-color);
 }
 
+/* Footer */
 .footer {
-  margin-top: 20px;
+  margin-top: 30px;
   text-align: right;
+  border-top: 1px solid var(--border-light);
+  padding-top: 16px;
 }
 
+/* Settings Panel */
 #settings-panel {
   position: absolute;
   top: 0;
@@ -99,35 +177,222 @@ button:hover {
   right: 0;
   bottom: 0;
   background-color: white;
-  padding: 15px;
+  padding: 20px;
   z-index: 10;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-md);
+  overflow-y: auto;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 .setting-item {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-color);
+  font-weight: 500;
 }
 
 input, select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  transition: var(--transition);
 }
 
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 112, 210, 0.2);
+}
+
+input[type="password"] {
+  letter-spacing: 0.1em;
+}
+
+/* Setting actions */
 .setting-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 30px;
 }
 
+/* Settings section */
+.settings-section {
+  margin-top: 20px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 20px;
+}
+
+/* Security Settings */
+.security-settings {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 15px;
+  background-color: var(--secondary-color);
+  padding: 15px;
+  border-radius: var(--radius-md);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--primary-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.settings-button {
+  margin-left: auto;
+  padding: 6px 12px;
+  height: 30px;
+  font-size: 13px;
+}
+
+/* Modal */
+.modal {
+  display: none; /* Changed from hidden class to display: none */
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+  display: block; /* Add this class to show the modal */
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 80%;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: var(--text-muted);
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--text-color);
+}
+
+.field-options {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.field-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.field-options input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+#loading p {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Utility classes */
 .hidden {
-  display: none;
+  display: none !important;
+}
+
+/* Test logging button styles */
+#test-logging-btn {
+  margin-top: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #e2e4e7;
+  color: #555;
+  font-size: 13px;
+  padding: 6px 12px;
+  height: 32px;
+  transition: all 0.2s ease;
+}
+
+#test-logging-btn:hover {
+  background-color: #f0f1f2;
+  border-color: #d0d2d5;
 }

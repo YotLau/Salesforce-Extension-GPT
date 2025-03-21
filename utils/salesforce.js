@@ -155,6 +155,24 @@ function getMyDomain(hostname) {
     }
   }
   
+  // Handle production URLs (e.g., yotamorg.my.salesforce.com)
+  if (hostname.includes('.my.salesforce.com') && !hostname.includes('--')) {
+    console.log('Production domain detected:', hostname);
+    return hostname;
+  }
+  
+  // Handle sandbox setup domains (e.g., orgname--sandboxname.sandbox.my.salesforce-setup.com)
+  if (hostname.includes('sandbox.my.salesforce-setup.com')) {
+    console.log('Sandbox setup domain detected:', hostname);
+    return hostname; // Already in the correct format for API access
+  }
+  
+  // Handle production setup domains (e.g., orgname.my.salesforce-setup.com)
+  if (hostname.includes('.my.salesforce-setup.com') && !hostname.includes('sandbox')) {
+    console.log('Production setup domain detected:', hostname);
+    return hostname; // Already in the correct format for API access
+  }
+  
   return hostname;
 }
 

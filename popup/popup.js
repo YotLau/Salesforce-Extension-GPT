@@ -266,10 +266,11 @@ function loadSettings() {
 
 // Helper functions
 function isSalesforceDomain(hostname) {
-  // Update to include salesforce-setup.com domain
+  // Update to include all Salesforce domain patterns
   return hostname.includes('salesforce.com') || 
          hostname.includes('force.com') || 
-         hostname.includes('salesforce-setup.com');
+         hostname.includes('salesforce-setup.com') ||
+         hostname.includes('visualforce.com');
 }
 
 function showElement(element) {
@@ -409,3 +410,180 @@ async function initPopup() {
     showError(`Error initializing popup: ${error.message}`);
   }
 }
+
+// Add this to your DOM elements section
+const testLoggingBtn = document.createElement('button');
+testLoggingBtn.id = 'test-logging-btn';
+testLoggingBtn.textContent = '🧪 Test Logging';
+testLoggingBtn.className = 'secondary-btn';
+testLoggingBtn.style.marginTop = '10px';
+
+// Add event listener for the test button
+testLoggingBtn.addEventListener('click', () => {
+  console.clear();
+  console.log('🧪 Testing API interaction logging...');
+  console.log('Check the logs after clicking Summarize to see the API interaction details');
+  
+  // Add visual indicator that logging is enabled
+  testLoggingBtn.textContent = '🔍 Logging Enabled';
+  testLoggingBtn.style.backgroundColor = '#4CAF50';
+  testLoggingBtn.style.color = 'white';
+  
+  // Reset after 3 seconds
+  setTimeout(() => {
+    testLoggingBtn.textContent = '🧪 Test Logging';
+    testLoggingBtn.style.backgroundColor = '';
+    testLoggingBtn.style.color = '';
+  }, 3000);
+});
+
+// Add this to your initializePopup function
+function addTestLoggingButton() {
+  // Only add in development mode or with a special flag
+  if (location.hostname === 'localhost' || localStorage.getItem('devMode') === 'true') {
+    const container = document.querySelector('.settings-actions') || document.getElementById('rule-info');
+    if (container) {
+      container.appendChild(testLoggingBtn);
+    }
+  }
+}
+
+// Call this function after DOM is loaded
+// Remove any duplicate DOMContentLoaded event listeners and keep only this one
+document.addEventListener('DOMContentLoaded', () => {
+  initializePopup();
+  initializeSecuritySettings();
+  addTestLoggingButton();
+});
+
+// Add a keyboard shortcut to enable dev mode
+document.addEventListener('keydown', (e) => {
+  // Ctrl+Shift+D to toggle dev mode
+  if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    const devMode = localStorage.getItem('devMode') === 'true';
+    localStorage.setItem('devMode', (!devMode).toString());
+    console.log(`Dev mode ${!devMode ? 'enabled' : 'disabled'}`);
+    
+    // Refresh the popup
+    location.reload();
+  }
+});
+
+// Other event listeners...
+// Remove the extra closing brace as it doesn't match any opening brace
+
+// Initialize security settings
+async function initializeSecuritySettings() {
+  // Get stored security preferences
+  const { fieldObfuscationEnabled = true } = await chrome.storage.sync.get(['fieldObfuscationEnabled']);
+  
+  // Set toggle state
+  document.getElementById('field-obfuscation').checked = fieldObfuscationEnabled;
+  
+  // Add event listener for toggle
+  document.getElementById('field-obfuscation').addEventListener('change', function(event) {
+    chrome.storage.sync.set({ fieldObfuscationEnabled: event.target.checked });
+  });
+  
+  // Add event listener for customize button
+  document.getElementById('customize-fields').addEventListener('click', openFieldCustomizationModal);
+}
+
+// First, let's make sure loadFieldProtectionSettings is defined before it's used
+// Add this function definition before openFieldCustomizationModal
+
+// Load field protection settings
+async function loadFieldProtectionSettings() {
+  const { 
+    protectCustomFields = true,
+    protectStandardFields = true,
+    protectSensitiveFields = true
+  } = await chrome.storage.sync.get(['protectCustomFields', 'protectStandardFields', 'protectSensitiveFields']);
+  
+  // Set checkbox states
+  document.getElementById('protect-custom').checked = protectCustomFields;
+  document.getElementById('protect-standard').checked = protectStandardFields;
+  document.getElementById('protect-sensitive').checked = protectSensitiveFields;
+}
+
+// Open modal for customizing protected fields
+function openFieldCustomizationModal() {
+  console.log('Opening field customization modal');
+  
+  // Get the modal element
+  const modal = document.getElementById('field-customization-modal');
+  
+  if (!modal) {
+    console.error('Modal element not found');
+    return;
+  }
+  
+  // Load current settings
+  loadFieldProtectionSettings();
+  
+  // Remove the hidden class AND set display to block
+  modal.classList.remove('hidden');
+  modal.style.display = 'block';
+  
+  // Add event listeners if they don't exist yet
+  if (!modal.hasAttribute('data-initialized')) {
+    // Add event listener for close button
+    const closeBtn = modal.querySelector('.close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+      });
+    }
+    
+    // Add event listener for save button
+    const saveBtn = modal.querySelector('#save-field-settings');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', saveFieldProtectionSettings);
+    }
+    
+    // Close when clicking outside the modal content
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+      }
+    });
+    
+    // Mark as initialized
+    modal.setAttribute('data-initialized', 'true');
+  }
+}
+
+// Also update the saveFieldProtectionSettings function to handle both display and class
+async function saveFieldProtectionSettings() {
+  const protectCustomFields = document.getElementById('protect-custom').checked;
+  const protectStandardFields = document.getElementById('protect-standard').checked;
+  const protectSensitiveFields = document.getElementById('protect-sensitive').checked;
+  
+  // Save to storage
+  await chrome.storage.sync.set({
+    protectCustomFields,
+    protectStandardFields,
+    protectSensitiveFields
+  });
+  
+  // Close modal - handle both display and class
+  const modal = document.getElementById('field-customization-modal');
+  modal.style.display = 'none';
+  modal.classList.add('hidden');
+}
+
+// Make sure the document ready event listener includes initializeSecuritySettings
+document.addEventListener('DOMContentLoaded', () => {
+  initializePopup();
+  initializeSecuritySettings();
+});
+
+// Window click event to close modal when clicking outside
+window.addEventListener('click', (event) => {
+  const modal = document.getElementById('field-customization-modal');
+  if (modal && event.target === modal) {
+    modal.style.display = 'none';
+  }
+});
