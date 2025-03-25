@@ -7,7 +7,8 @@ let currentTab = null;
 let currentHost = null;
 let validationRuleInfo = null;
 let sessionInfo = null;
-let currentFlowId = null;  // Add this line
+let currentFlowId = null;
+let currentFormulaFieldId = null;
 
 // DOM elements
 const notSalesforceEl = document.getElementById('not-salesforce');
@@ -129,6 +130,27 @@ async function initializePopup() {
         return;
       }
       
+      // Check if it's a formula field page
+      console.log('Checking formula field page:', currentTab.url);
+      const formulaResponse = await chrome.tabs.sendMessage(currentTab.id, { action: 'checkFormulaFieldPage' });
+      console.log('Formula field check response:', formulaResponse);
+      
+      if (formulaResponse && formulaResponse.isFormulaFieldPage) {
+        // Store formula field ID
+        currentFormulaFieldId = formulaResponse.fieldId;
+        
+        // Get session
+        sessionInfo = await getSession(currentHost);
+        
+        // Show formula field info
+        ruleNameEl.textContent = 'Formula Field';
+        objectNameEl.textContent = `Field ID: ${currentFormulaFieldId}`;
+        
+        hideElement(loadingEl);
+        showElement(ruleInfoEl);
+        return;
+      }
+      
       // Not on a supported page
       showElement(notSalesforceEl);
       hideElement(loadingEl);
@@ -217,8 +239,30 @@ async function handleSummarize() {
       // Show explanation
       explanationContentEl.innerHTML = formatExplanation(explanation);
       showElement(explanationEl);
+    } else if (currentFormulaFieldId) {
+      // Handle formula field
+      console.log('Processing formula field with ID:', currentFormulaFieldId);
+      
+      // Import required modules
+      const { getFormulaFieldMetadata } = await import('../utils/salesforce.js');
+      const { explainFormulaField } = await import('../utils/api.js');
+      
+      // Get formula field metadata
+      const formulaMetadata = await getFormulaFieldMetadata(currentFormulaFieldId, sessionInfo);
+      
+      // Update display name
+      ruleNameEl.textContent = formulaMetadata.Name || 'Formula Field';
+      objectNameEl.textContent = formulaMetadata.EntityDefinition?.QualifiedApiName || '';
+      
+      // Get explanation from OpenAI
+      const model = openaiModelSelect.value;
+      const explanation = await explainFormulaField(formulaMetadata, apiKey, model);
+      
+      // Show explanation
+      explanationContentEl.innerHTML = formatExplanation(explanation);
+      showElement(explanationEl);
     } else {
-      throw new Error('No validation rule, flow, or Apex class identified');
+      throw new Error('No validation rule, flow, Apex class, or formula field identified');
     }
     
   } catch (error) {

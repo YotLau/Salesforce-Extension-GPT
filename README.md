@@ -1,13 +1,14 @@
 # 🔍 Salesforce AI Explainer
 
 ![Salesforce AI Explainer](https://img.shields.io/badge/Salesforce-AI%20Explainer-blue)
-![Version](https://img.shields.io/badge/version-1.1-green)
+![Version](https://img.shields.io/badge/version-1.2-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
 A Chrome extension that uses AI to explain complex Salesforce configurations in simple terms. Currently supports:
 - ✅ Validation Rules
-- ✅ Flows
+- ✅ Flows 
 - ✅ Apex Classes
+- ✅ Formula Fields
 
 ## 🌟 Features
 
@@ -77,6 +78,15 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
 3. Click the 🤖 Summarize button
 4. View the AI-generated explanation of the class purpose, methods, and patterns
 
+### Explaining Formula Fields
+1. Navigate to any Salesforce formula field definition
+2. Click the extension icon  
+3. Click the 🤖 Summarize button
+4. View the AI-generated explanation including:
+   - Formula purpose and logic
+   - Expected outputs based on field type
+   - Technical considerations
+
 ### Security Settings
 1. In the Settings panel, toggle "Protect Field Names" to enable/disable field obfuscation
 2. Click "Customize Protected Fields" to configure which types of fields should be protected:
@@ -85,9 +95,10 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
    - Sensitive Fields (containing keywords like "password", "ssn", etc.)
 
 ### Developer Mode
-1. To enable Developer Mode, open the browser console and type: `localStorage.setItem('devMode', 'true')`
-2. With Developer Mode enabled, you'll see detailed logs of API interactions in the console
-3. To disable: `localStorage.setItem('devMode', 'false')` or `localStorage.removeItem('devMode')`
+1. Press `Ctrl+Shift+D` when on the popup to toggle Developer Mode on/off
+2. Alternatively, open the browser console and type: `localStorage.setItem('devMode', 'true')`
+3. With Developer Mode enabled, you'll see detailed logs of API interactions in the console
+4. To disable via console: `localStorage.setItem('devMode', 'false')` or `localStorage.removeItem('devMode')`
 
 ## 🔒 Security & Privacy
 

@@ -58,3 +58,7 @@ coverage/
 
 # Optional eslint cache
 .eslintcache
+
+# Cline Memory bank files
+memory-bank/
+.clinerules

@@ -12,9 +12,62 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "checkApexClassPage") {
     const apexInfo = extractApexClassInfo();
     sendResponse(apexInfo);
+  } else if (request.action === "checkFormulaFieldPage") {
+    const formulaInfo = extractFormulaFieldInfo();
+    sendResponse(formulaInfo);
   }
   return true;
 });
+
+// Extract formula field info from current page
+function extractFormulaFieldInfo() {
+  const url = window.location.href;
+  console.log('Checking URL for Formula Field in content script:', url);
+  
+  // Check if we're on a formula field page
+  const isFormulaFieldPage = 
+    url.includes('/CustomField/') ||
+    url.includes('setupid=CustomFields') ||
+    url.includes('setup/FieldDetail') ||
+    /\/00N[a-zA-Z0-9]{12,15}(?:\/|$)/.test(url) || // Standard field ID pattern
+    /\/00D[a-zA-Z0-9]{12,15}(?:\/|$)/.test(url); // Custom field ID pattern
+  
+  console.log('Is formula field page?', isFormulaFieldPage);
+  
+  if (!isFormulaFieldPage) {
+    return { isFormulaFieldPage: false };
+  }
+  
+  // Extract field ID from URL
+  let fieldId = '';
+  
+  // Different URL patterns for Lightning vs Classic
+  if (url.includes('/CustomField/')) {
+    // Lightning URL format
+    const urlParts = url.split('/');
+    const idIndex = urlParts.indexOf('CustomField') + 1;
+    if (idIndex < urlParts.length) {
+      fieldId = urlParts[idIndex];
+    }
+  } else if (/\/00[N|D][a-zA-Z0-9]{12,15}(?:\/|$)/.test(url)) {
+    // Extract ID directly from URL
+    const matches = url.match(/\/(00[N|D][a-zA-Z0-9]{12,15})/);
+    if (matches && matches[1]) {
+      fieldId = matches[1];
+    }
+  } else {
+    // Classic URL format
+    const urlParams = new URLSearchParams(url.split('?')[1]);
+    fieldId = urlParams.get('id');
+  }
+  
+  console.log('Extracted formula field ID:', fieldId);
+  
+  return {
+    isFormulaFieldPage: Boolean(fieldId),
+    fieldId
+  };
+}
 
 // Extract validation rule info from current page
 function extractValidationRuleInfo() {
