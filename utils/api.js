@@ -170,6 +170,11 @@ async function getComponentUtils(componentType) {
         processMetadata: processApexClass,
         createComponentPrompt: createApexClassPrompt
       };
+    case 'formulaField':
+      return {
+        processMetadata: (metadata) => metadata, // No special processing needed
+        createComponentPrompt: createFormulaFieldPrompt
+      };
     default:
       throw new Error(`Unknown component type: ${componentType}`);
   }
@@ -180,11 +185,42 @@ async function getComponentUtils(componentType) {
  * @param {String} componentType - The type of component
  * @returns {String} The system prompt
  */
+// Create prompt for formula field explanation
+function createFormulaFieldPrompt(metadata) {
+  const formula = metadata.formula || '';
+  const fieldName = metadata.DeveloperName || 'Unnamed Field';
+  const description = metadata.Description || '';
+  const fieldType = metadata.type || 'Unknown Type';
+  
+  return `
+Explain this Salesforce formula field:
+
+FIELD INFORMATION:
+- Name: ${fieldName}
+- Type: ${fieldType}
+${description ? `- Description: ${description}` : ''}
+
+FORMULA:
+\`\`\`
+${formula}
+\`\`\`
+
+REQUESTED OUTPUT:
+1. Purpose: In 1-2 sentences, What this formula calculates
+2. Behavior: How it works based on the field type
+3. Examples: Sample inputs/outputs
+4. Technical Analysis (optional): Brief explanation of any complex formula logic.
+
+Please be concise and use plain, non-technical language where possible. Focus on what a user needs to know to successfully work with this rule.
+`;
+}
+
 function getSystemPromptForComponent(componentType) {
   const prompts = {
     validationRule: 'You are an expert in Salesforce validation rules. Explain the validation rule in clear, concise language that helps users understand its purpose and how to comply with it.',
     flow: 'You are an expert in Salesforce flows. Explain the flow in clear, concise language that helps developers understand its purpose and functionality.',
-    apexClass: 'You are an expert in Salesforce Apex development. Explain the Apex code in clear, concise language that helps developers understand its purpose and functionality.'
+    apexClass: 'You are an expert in Salesforce Apex development. Explain the Apex code in clear, concise language that helps developers understand its purpose and functionality.',
+    formulaField: 'You are an expert in Salesforce formula fields. Explain the formula in clear language that helps both administrators and developers understand its purpose and behavior.'
   };
   
   return prompts[componentType] || 'You are an expert in Salesforce development.';
@@ -205,11 +241,17 @@ async function explainApexClass(apexClassMetadata, apiKey, model) {
   return explainSalesforceComponent(apexClassMetadata, 'apexClass', apiKey, model);
 }
 
+// Formula field explanation function for backward compatibility
+async function explainFormulaField(formulaMetadata, apiKey, model) {
+  return explainSalesforceComponent(formulaMetadata, 'formulaField', apiKey, model);
+}
+
 // Export all functions
 export {
   explainValidationRule,
   explainFlow,
   explainApexClass,
+  explainFormulaField,
   explainSalesforceComponent,
   createPrompt
 };

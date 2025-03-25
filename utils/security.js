@@ -76,9 +76,9 @@ function obfuscateFieldsInFormula(formula, fieldMap, reverseMap, counter) {
   const protectStandardFields = localStorage.getItem('protectStandardFields') !== 'false';
   const protectSensitiveFields = localStorage.getItem('protectSensitiveFields') !== 'false';
   
-  // Regular expression to find field references in formulas
-  // This pattern looks for standard and custom fields
-  const fieldPattern = /\b([A-Za-z0-9_]+__[cr])\b|\.([A-Za-z0-9_]+)\b/g;
+  // Enhanced regular expression to find field references in formulas
+  // Handles standard fields, custom fields, and cross-object references
+  const fieldPattern = /(\b[A-Za-z0-9_]+__[cr]\b)|(\.\b[A-Za-z0-9_]+\b)|(\b[A-Za-z0-9_]+\.[A-Za-z0-9_]+\b)/g;
   
   // Find all field references and replace them
   obfuscatedFormula = obfuscatedFormula.replace(fieldPattern, (match, customField, standardField) => {

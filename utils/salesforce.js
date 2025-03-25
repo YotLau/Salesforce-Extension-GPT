@@ -223,10 +223,35 @@ async function getApexClassMetadata(apexClassId, sessionInfo) {
 }
 
 // Single export statement for all functions
+// Get Formula Field metadata
+async function getFormulaFieldMetadata(fieldId, sessionInfo) {
+  try {
+    const query = `SELECT Id, DeveloperName, Description, Metadata, FullName 
+                 FROM CustomField WHERE Id = '${fieldId}'`;
+    const url = `/services/data/v${API_VERSION}/tooling/query?q=${encodeURIComponent(query)}`;
+    const result = await makeRestCall(url, sessionInfo);
+    
+    if (!result.records || result.records.length === 0) {
+      throw new Error("Formula field not found");
+    }
+    
+    const record = result.records[0];
+    return {
+      ...record,
+      type: record?.Metadata?.type,
+      formula: record?.Metadata?.formula
+    };
+  } catch (error) {
+    console.error("Error fetching formula field metadata:", error);
+    throw error;
+  }
+}
+
 export {
   getSession,
   getValidationRuleMetadata,
   getFlowMetadata,
   getApexClassMetadata,
+  getFormulaFieldMetadata,
   makeRestCall
 };
