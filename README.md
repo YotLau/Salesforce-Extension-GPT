@@ -94,8 +94,6 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
    - Standard Fields
    - Sensitive Fields (containing keywords like "password", "ssn", etc.)
 
-// Update the Developer Mode section
-
 ### Developer Mode
 1. Press `Ctrl+Shift+D` when on the popup to toggle Developer Mode on/off
 2. Alternatively, open the browser console and type: `localStorage.setItem('devMode', 'true')`
