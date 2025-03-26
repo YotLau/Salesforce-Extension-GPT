@@ -52,6 +52,31 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
 
 ## 🚀 Usage
 
+### Using the Explainer
+1. Navigate to any of these Salesforce components:
+   - **Validation Rules**: On any validation rule detail page
+   - **Flows**: Within Flow Builder editing interface
+   - **Apex Classes**: In Setup > Apex Classes
+   - **Formula Fields**: On any formula field definition page
+
+2. Click the extension icon in your Chrome toolbar
+3. Click the 🤖 **Summarize** button
+4. Receive instant AI-powered analysis including:
+   - Component purpose and logic
+   - Key functional aspects
+   - User impact considerations
+   - Technical implementation notes
+
+### Detailed Explanations
+| Component Type       | Location                          | Explanation Includes                      |
+|----------------------|-----------------------------------|-------------------------------------------|
+| **Validation Rules** | Object Manager > Validation Rules | Formula analysis, error conditions, fixes |
+| **Flows**            | Flow Builder                     | Flow logic, decision paths, best practices |
+| **Apex Classes**     | Setup > Apex Classes             | Class purpose, method summaries, patterns |
+| **Formula Fields**   | Object Manager > Formula Fields | Formula logic, return types, dependencies |
+
+🔼 *Table: Salesforce component types and their explanation features*
+
 ### Setting Up
 1. Click the extension icon in your Chrome toolbar
 2. Click the ⚙️ Settings button
@@ -59,33 +84,6 @@ A Chrome extension that uses AI to explain complex Salesforce configurations in 
 4. Select your preferred model (GPT-4o Mini, GPT-4o, or GPT-4)
 5. Configure security settings for field protection
 6. Click Save
-
-### Explaining Validation Rules
-1. Navigate to any Salesforce validation rule in your org
-2. Click the extension icon
-3. Click the 🤖 Summarize button
-4. View the AI-generated explanation
-
-### Explaining Flows
-1. Navigate to any Salesforce flow in Flow Builder
-2. Click the extension icon
-3. Click the 🤖 Summarize button
-4. View the AI-generated explanation
-
-### Explaining Apex Classes
-1. Navigate to any Salesforce Apex Class in Setup
-2. Click the extension icon
-3. Click the 🤖 Summarize button
-4. View the AI-generated explanation of the class purpose, methods, and patterns
-
-### Explaining Formula Fields
-1. Navigate to any Salesforce formula field definition
-2. Click the extension icon  
-3. Click the 🤖 Summarize button
-4. View the AI-generated explanation including:
-   - Formula purpose and logic
-   - Expected outputs based on field type
-   - Technical considerations
 
 ### Security Settings
 1. In the Settings panel, toggle "Protect Field Names" to enable/disable field obfuscation
@@ -117,6 +115,18 @@ The extension has been refactored with a modular architecture:
 - **Generic Component Explainer**: Unified approach to explaining different Salesforce components
 - **Enhanced Prompts**: Better structured prompts for more accurate and useful explanations
 - **Security Utilities**: Comprehensive field protection with customizable settings
+
+## 🗺️ Roadmap
+
+Upcoming features in development:
+
+- **Field Mapping Visualization** 🔄  
+  - show a field mapping and type of all fields in the component
+
+- **Flow Test Case Generator** ⚡  
+  - Auto-generate test scenarios based on flow logic
+  - Create data templates for flow testing
+  - Export test cases to Salesforce DX format
 
 ## 🤝 Contributing
 
